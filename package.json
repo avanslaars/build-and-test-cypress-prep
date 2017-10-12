@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "serve": "json-server --watch --static ./build --port 3030 db.json",
+    "serve": "json-server db.json",
     "dev": "npm run watch & npm run serve"
   },
   "keywords": [],
