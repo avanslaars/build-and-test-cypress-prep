@@ -30,5 +30,5 @@ server.use(jsonServer.bodyParser)
 
 server.use(router)
 server.listen(3030, () => {
-  console.log('Server is running on port 3030')
+  console.log('Server is running at http://localhost:3030')
 })
