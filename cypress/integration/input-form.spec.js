@@ -1,15 +1,17 @@
 describe('Input Form', () => {
-  it('focuses input on load', () => {
+  beforeEach(() => {
     cy.visit('localhost:3030')
-      .focused()
+  })
+
+  it('focuses input on load', () => {
+    cy.focused()
       .should('have.class', 'new-todo')
   })
 
-  it.only('accepts input', () => {
+  it('accepts input', () => {
     const inputText = 'This is a test'
 
-    cy.visit('localhost:3030')
-      .get('.new-todo')
+    cy.get('.new-todo')
       .type(inputText)
       .should('have.value', inputText)
   })
