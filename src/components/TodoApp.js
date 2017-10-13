@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
-import {saveTodo} from '../lib/service'
+import {saveTodo, fetchTodos} from '../lib/service'
 
 export default class TodoApp extends Component {
 	constructor(props) {
@@ -14,6 +14,13 @@ export default class TodoApp extends Component {
 
 		this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
 		this.handleTodoSubmit = this.handleTodoSubmit.bind(this)
+	}
+
+	componentDidMount () {
+		fetchTodos()
+			.then(({data}) => this.setState({todos: data}))
+			.catch(() => this.setState({error: true}))
+			
 	}
 
 	handleNewTodoChange (evt) {
