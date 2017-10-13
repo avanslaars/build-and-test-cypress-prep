@@ -1,19 +1,31 @@
 import React, {Component} from 'react'
 import TodoForm from './TodoForm'
+import TodoList from './TodoList'
+import {saveTodo} from '../lib/service'
 
 export default class TodoApp extends Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			currentTodo: ''
+			currentTodo: '',
+			todos: []
 		}
 
 		this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
+		this.handleTodoSubmit = this.handleTodoSubmit.bind(this)
 	}
 
 	handleNewTodoChange (evt) {
 		this.setState({currentTodo: evt.target.value})
+	}
+
+	handleTodoSubmit (evt) {
+		evt.preventDefault()
+		const newTodo = {name: this.state.currentTodo, isComplete: false}
+		saveTodo(newTodo)
+			.then(({data}) => this.setState({todos: this.state.todos.concat(data), currentTodo: ''}))
+			.catch(() => this.setState({error: true}))
 	}
 
   render () {
@@ -21,24 +33,15 @@ export default class TodoApp extends Component {
       <div>
       <header className="header">
         <h1>todos</h1>
-        <TodoForm 
+				{this.state.error ? <h1 className='error'>Oh no!</h1> : null}
+        <TodoForm
+					handleSubmit={this.handleTodoSubmit}
 					currentTodo={this.state.currentTodo}
 					handleChange={this.handleNewTodoChange} />
       </header>
       <section className="main">
         <input className="toggle-all" type="checkbox" />
-        <ul className="todo-list">
-        <li>
-					<div className="view">
-						<input className="toggle" type="checkbox" />
-						<label>
-							Make it work
-						</label>
-						<button className="destroy" />
-					</div>
-					<input ref="editField" className="edit" />
-				</li>
-        </ul>
+        <TodoList todos={this.state.todos} />
       </section>
       <footer className="footer">
 					<span className="todo-count">
