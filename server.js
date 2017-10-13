@@ -1,14 +1,22 @@
 const jsonServer = require('json-server')
 const server = jsonServer.create()
 const router = jsonServer.router('db.json')
+// const basicAuth = require('express-basic-auth')
 const middleware = jsonServer.defaults({
   static: './build'
 })
+
+// server.use(basicAuth({
+//   users: {'admin': 'secret'},
+//   challenge: true,
+//   realm: 'sample_app_8765k'
+// }))
 
 server.use(middleware)
 server.use(jsonServer.rewriter({
   '/api/*': '/$1'
 }))
+
 
 // Custom route to handle deleting multiple todos
 server.delete('/todos', (req, res) => {
