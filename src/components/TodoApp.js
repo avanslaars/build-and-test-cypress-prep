@@ -1,16 +1,29 @@
 import React, {Component} from 'react'
+import TodoForm from './TodoForm'
 
 export default class TodoApp extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			currentTodo: ''
+		}
+
+		this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
+	}
+
+	handleNewTodoChange (evt) {
+		this.setState({currentTodo: evt.target.value})
+	}
+
   render () {
     return (
       <div>
       <header className="header">
         <h1>todos</h1>
-        <form>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"/>
-        </form>
+        <TodoForm 
+					currentTodo={this.state.currentTodo}
+					handleChange={this.handleNewTodoChange} />
       </header>
       <section className="main">
         <input className="toggle-all" type="checkbox" />
