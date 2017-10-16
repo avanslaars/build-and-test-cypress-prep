@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
-import {saveTodo, fetchTodos} from '../lib/service'
+import {saveTodo, fetchTodos, updateTodo} from '../lib/service'
 
 export default class TodoApp extends Component {
 	constructor(props) {
@@ -14,6 +14,7 @@ export default class TodoApp extends Component {
 
 		this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
 		this.handleTodoSubmit = this.handleTodoSubmit.bind(this)
+		this.handleToggle = this.handleToggle.bind(this)
 	}
 
 	componentDidMount () {
@@ -35,7 +36,20 @@ export default class TodoApp extends Component {
 			.catch(() => this.setState({error: true}))
 	}
 
+	handleToggle (id) {
+		const targetTodo = this.state.todos.find(t => t.id === id)
+		const updated = {...targetTodo, isComplete: !targetTodo.isComplete}
+		updateTodo(updated)
+			.then(({data}) => {
+				const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
+				this.setState({todos: todos})
+			})
+			.catch(() => this.setState({error: true}))
+
+	}
+
   render () {
+		const remaining = this.state.todos.filter(t => !t.isComplete).length
     return (
       <div>
       <header className="header">
@@ -48,11 +62,11 @@ export default class TodoApp extends Component {
       </header>
       <section className="main">
         <input className="toggle-all" type="checkbox" />
-        <TodoList todos={this.state.todos} />
+        <TodoList todos={this.state.todos} handleToggle={this.handleToggle} />
       </section>
       <footer className="footer">
 					<span className="todo-count">
-						<strong>0</strong> todos left
+						<strong>{remaining}</strong> todos left
 					</span>
 					<ul className="filters">
 						<li><a href="/" >All</a></li>

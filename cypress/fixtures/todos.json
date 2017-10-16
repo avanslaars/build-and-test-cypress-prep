@@ -2,17 +2,17 @@
   {
     "id": 1,
     "name": "Buy Milk",
-    "isComplete": true
+    "isComplete": false
   },
   {
     "id": 2,
     "name": "Buy Eggs",
-    "isComplete": true
+    "isComplete": false
   },
   {
     "id": 3,
     "name": "Buy Bread",
-    "isComplete": true
+    "isComplete": false
   },
   {
     "id": 4,
