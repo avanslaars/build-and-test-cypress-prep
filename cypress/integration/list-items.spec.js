@@ -40,4 +40,19 @@ describe('List Items', () => {
     cy.get('.error')
       .should('be.visible')
   })
+
+  it.only('Removes a todo', () => {
+    cy.route({
+      url: `http://localhost:3030/api/todos/1`,
+      method: 'DELETE',
+      status: 202,
+      response: {}
+     })
+
+    cy.get('.todo-list li')
+     .first()
+     .find('.destroy')
+     .invoke('show') // Make the button visible
+     .click()
+  })
 })
