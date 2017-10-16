@@ -4,16 +4,17 @@ describe('App Initialization', () => {
   })
 
   it('Fetches todos on page load', () => {
-    cy.fixture('todos')
-      .then(data => {
-        cy.route({
-          method: 'GET',
-          url: 'http://localhost:3030/api/todos',
-          response: data
-        })
-      })
+    // cy.fixture('todos')
+    //   .then(data => {
+    //     cy.route({
+    //       method: 'GET',
+    //       url: 'http://localhost:3030/api/todos',
+    //       response: data
+    //     })
+    //   })
 
-    cy.visit('http://localhost:3030')
+    // cy.visit('http://localhost:3030')
+    cy.seedAndVisit()
 
     cy.get('.todo-list li')
       .should('have.length', 4)

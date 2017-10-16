@@ -1,6 +1,8 @@
 describe('Input Form', () => {
   beforeEach(() => {
-    cy.visit('localhost:3030')
+    cy.server()
+      .route('http://localhost:3030/api/todos', [])
+      .visit('localhost:3030')
   })
 
   it('focuses input on load', () => {
