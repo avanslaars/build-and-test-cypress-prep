@@ -1,10 +1,11 @@
+// @ts-check
 describe('List Items', () => {
   beforeEach(() => {
     cy.seedAndVisit()
   })
 
   it('toggles todos', () => {
-    cy.route('PUT', `http://localhost:3030/api/todos/1`, {
+    cy.route('PUT', `/api/todos/1`, {
       "id": 1,
       "name": "Buy Milk",
       "isComplete": true
@@ -26,7 +27,7 @@ describe('List Items', () => {
 
   it('Shows an error message on toggle failure', () => {
     cy.route({
-     url: `http://localhost:3030/api/todos/1`,
+     url: `/api/todos/1`,
      method: 'PUT',
      status: 500,
      response: {}
@@ -43,7 +44,7 @@ describe('List Items', () => {
 
   it.only('Removes a todo', () => {
     cy.route({
-      url: `http://localhost:3030/api/todos/1`,
+      url: `/api/todos/1`,
       method: 'DELETE',
       status: 202,
       response: {}
@@ -54,5 +55,9 @@ describe('List Items', () => {
      .find('.destroy')
      .invoke('show') // Make the button visible
      .click()
+     
+    cy.get('.todo-list li')
+     .should('have.length', 3)
+    
   })
 })

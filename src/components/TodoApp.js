@@ -15,6 +15,7 @@ export default class TodoApp extends Component {
 		this.handleNewTodoChange = this.handleNewTodoChange.bind(this)
 		this.handleTodoSubmit = this.handleTodoSubmit.bind(this)
 		this.handleToggle = this.handleToggle.bind(this)
+		this.handleDelete = this.handleDelete.bind(this)
 	}
 
 	componentDidMount () {
@@ -68,7 +69,7 @@ export default class TodoApp extends Component {
       </header>
       <section className="main">
         <input className="toggle-all" type="checkbox" />
-        <TodoList todos={this.state.todos} handleToggle={this.handleToggle} />
+        <TodoList todos={this.state.todos} handleToggle={this.handleToggle} handleDelete={this.handleDelete} />
       </section>
       <footer className="footer">
 					<span className="todo-count">

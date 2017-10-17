@@ -30,10 +30,10 @@ Cypress.Commands.add('seedAndVisit', () => {
     .then(data => {
       cy.route({
         method: 'GET',
-        url: 'http://localhost:3030/api/todos',
+        url: '/api/todos',
         response: data
       })
     })
 
-  cy.visit('http://localhost:3030')
+  cy.visit('/')
 })

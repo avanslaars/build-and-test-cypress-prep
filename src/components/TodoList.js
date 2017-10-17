@@ -9,12 +9,12 @@ const TodoItem = props =>
       <label>
         {props.name}
       </label>
-      <button className="destroy" />
+      <button className="destroy" onClick={() => props.handleDelete(props.id)} />
     </div>
     <input className="edit" />
   </li>
 
 export default props => 
   <ul className="todo-list">
-    {props.todos.map(todo => <TodoItem key={todo.id} {...todo} handleToggle={props.handleToggle} />)}
+    {props.todos.map(todo => <TodoItem key={todo.id} {...todo} handleToggle={props.handleToggle} handleDelete={props.handleDelete} />)}
   </ul>

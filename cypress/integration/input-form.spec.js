@@ -1,8 +1,8 @@
 describe('Input Form', () => {
   beforeEach(() => {
     cy.server()
-      .route('http://localhost:3030/api/todos', [])
-      .visit('localhost:3030')
+      .route('/api/todos', [])
+      .visit('/')
   })
 
   it('focuses input on load', () => {
@@ -24,7 +24,7 @@ describe('Input Form', () => {
     })
 
     it('Adds a new todo on submit', () => {
-      cy.route('POST', 'http://localhost:3030/api/todos', {
+      cy.route('POST', '/api/todos', {
         name: 'test',
         id: 1,
         isComplete: false
@@ -41,7 +41,7 @@ describe('Input Form', () => {
   
     it('Shows an error on a failed submit', () => {
       cy.route({
-        url: 'http://localhost:3030/api/todos',
+        url: '/api/todos',
         method: 'POST',
         status: 500,
         response: {}

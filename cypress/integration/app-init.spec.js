@@ -22,12 +22,12 @@ describe('App Initialization', () => {
 
   it('Shows an error on failure to fetch', () => {
     cy.route({
-      url: 'http://localhost:3030/api/todos',
+      url: '/api/todos',
       method: 'GET',
       status: 500,
       response: []
     })
-    cy.visit('http://localhost:3030')
+    cy.visit('/')
     cy.get('.todo-list li')
       .should('have.length', 0)
       .get('h1.error')
