@@ -42,7 +42,7 @@ describe('List Items', () => {
       .should('be.visible')
   })
 
-  it.only('Removes a todo', () => {
+  it('Removes a todo', () => {
     cy.route({
       url: `/api/todos/1`,
       method: 'DELETE',

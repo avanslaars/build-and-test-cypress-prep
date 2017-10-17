@@ -26,14 +26,6 @@
 
 Cypress.Commands.add('seedAndVisit', () => {
   cy.server()
-  cy.fixture('todos')
-    .then(data => {
-      cy.route({
-        method: 'GET',
-        url: '/api/todos',
-        response: data
-      })
-    })
-
-  cy.visit('/')
+    .route('GET', '/api/todos','fixture:todos')
+    .visit('/')
 })
