@@ -238,14 +238,6 @@ label[for='toggle-all'] {
 	display: block;
 }
 
-.todo-list li .edit {
-	display: none;
-}
-
-.todo-list li.editing:last-child {
-	margin-bottom: -1px;
-}
-
 .footer {
 	color: #777;
 	padding: 10px 15px;
@@ -307,20 +299,6 @@ label[for='toggle-all'] {
 
 .filters li a.selected {
 	border-color: rgba(175, 47, 47, 0.2);
-}
-
-.clear-completed,
-html .clear-completed:active {
-	float: right;
-	position: relative;
-	line-height: 20px;
-	text-decoration: none;
-	cursor: pointer;
-	position: relative;
-}
-
-.clear-completed:hover {
-	text-decoration: underline;
 }
 
 .info {

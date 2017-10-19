@@ -13,7 +13,4 @@ export default props =>
       {' '}
       <li><Link to="/completed" >Completed</Link></li>
     </ul>
-    <button className="clear-completed">
-      Clear completed
-    </button>
   </footer>

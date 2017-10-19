@@ -4,10 +4,8 @@ import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 import Footer from './Footer'
 import {saveTodo, fetchTodos, updateTodo, destroyTodo} from '../lib/service'
+import {filterTodos} from '../lib/utils'
 
-const filterTodos = (filter, todos) => filter
-	? todos.filter(todo => todo.isComplete === (filter === 'completed'))
-	: todos
 
 export default class TodoApp extends Component {
 	constructor(props) {
@@ -77,7 +75,6 @@ export default class TodoApp extends Component {
 							handleChange={this.handleNewTodoChange} />
 					</header>
 					<section className="main">
-						<input className="toggle-all" type="checkbox" />
 						<Route path='/:filter?' render={({match}) => 
 							<TodoList todos={filterTodos(match.params.filter, this.state.todos)} handleToggle={this.handleToggle} handleDelete={this.handleDelete} />
 						} />

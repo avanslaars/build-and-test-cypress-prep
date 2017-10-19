@@ -11,7 +11,6 @@ const TodoItem = props =>
       </label>
       <button className="destroy" onClick={() => props.handleDelete(props.id)} />
     </div>
-    <input className="edit" />
   </li>
 
 export default props => 
