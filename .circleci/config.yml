@@ -36,7 +36,7 @@ jobs:
       - run: yarn build
 
       - run:
-          name: Web Server
+          name: Run server
           command: yarn serve
           background: true
         
