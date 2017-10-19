@@ -1,104 +1,112 @@
-const toggleAllTodos = shouldHaveClass => $el => {
-  const chainer = `${shouldHaveClass ? '' : 'not.'}have.class`
-  cy.wrap($el)
-    .as('item')
-    .find('input[type="checkbox"]')
-    .click()
-    .wait('@update')
-
-  cy.get('@item')
-    .should(chainer, 'completed')
+const clearDatabase = () => {
+  cy.request('GET', '/api/todos')
+    .its('body')
+    .each(todo => cy.request('DELETE', `/api/todos/${todo.id}`))
 }
 
 describe('Smoke Tests', () => {
-  beforeEach(() => {
-    cy.fixture('todos')
-      .each(todo => cy.request('POST', '/api/todos', todo))
-    cy.server()
+  beforeEach(clearDatabase)
+  after(clearDatabase)
 
-    cy.route('PUT', '/api/todos/*')
-      .as('update')
-    cy.route('POST', '/api/todos')
-      .as('create')
-
-    cy.visit('/')
+  context('With no todos', () => {
+    it('Creates some todos', () => {
+      cy.visit('/')
+      cy.server()
+      cy.route('POST', '/api/todos')
+        .as('create')
+      
+      const items = [
+        {text: 'One', expected: 1},
+        {text: 'Two', expected: 2},
+        {text: 'Three', expected: 3}
+      ]
+  
+      items.forEach(item => {
+        cy.focused()
+          .type(`${item.text}{enter}`)
+          .wait('@create')
+    
+        cy.get('.todo-list li')
+          .should('have.length', item.expected)
+      })
+    })
   })
 
-  afterEach(() => {
-    cy.request('GET', '/api/todos')
-      .its('body')
-      .each(todo => cy.request('DELETE', `/api/todos/${todo.id}`))
-  })  
-
-  it('Loads existing data from the database', () => {
-    cy.get('.todo-list li')
-      .should('have.length', 4)
-  })
-
-  it('Toggles todos', () => {
-    // cy.server()
-    // cy.route('PUT', '/api/todos/*')
-    //   .as('update')
-
-    cy.get('.todo-list li')
-      .each(toggleAllTodos(true))
-      .each(toggleAllTodos(false))
-  })
-
-  it('Filters todos', () => {
-    cy.get('.todo-list li')
-      .as('todos')
-      .each(($el, idx) => {
-        if (idx % 2 === 0) {
+  context('With active todos', () => {
+    beforeEach(() => {
+      cy.fixture('todos')
+        .each(todo => cy.request('POST', '/api/todos', todo))
+      cy.visit('/')
+    })
+    
+    it('Loads existing data from the database', () => {
+      cy.get('.todo-list li')
+        .should('have.length', 4)
+    })
+    
+    it('Deletes some todos', () => {
+      cy.server()
+      cy.route('DELETE', '/api/todos/*')
+        .as('delete')
+      cy.get('.todo-list li')
+        .each($el => {
           cy.wrap($el)
+            .find('.destroy')
+            .invoke('show')
+            .click()
+            .wait('@delete')
+        })
+        .should('have.length', 0)
+    })
+
+    it('Toggles todos', () => {
+      cy.server()
+      cy.route('PUT', '/api/todos/*')
+        .as('update')
+    
+      const clickAndWait = ($el) => {
+          cy.wrap($el)
+            .as('item')
             .find('input[type="checkbox"]')
             .click()
             .wait('@update')
-        }
-      })
-    
-      /**
-       * Interesting behavior:
-       * I had to use `cy.get('.footer')` here because without it
-       * `.contains()` was relative to the previous subject (the result of the previous `get`)
-       * That makes sense, but then after this `click()` I use `get` with an alias, and then
-       * make a new `contains()` calls, and that one works, which tells me it is relative to
-       * what is yielded by `get('.footer')`, not what is yielded by the `get('@todos')`.
-       * I'm sure there is a reason
-       */
+      }
 
-    // CypressError: Timed out retrying: Expected to find content: 'Active' within the element: [ <li.completed>, 3 more... ] but never did.
-    // cy.contains('Active')
-    //   .click()
-
-    cy.get('.footer')
-      .contains('Active')
-      .click()
-    
-    // I get the todos again
-    cy.get('@todos')
-      .should('have.length', 2)
-
-    // Why doesn't this one fail?
-    cy.contains('Completed')
-      .click()
-    
-    cy.get('@todos')
-      .should('have.length', 2)
-
-    cy.contains('All')
-      .click()
-    
-    cy.get('@todos')
-      .should('have.length', 4)
+      cy.get('.todo-list li')
+        .each($el => {
+          clickAndWait($el)
+          cy.get('@item')
+            .should('have.class', 'completed')
+        })
+        .each($el => {
+          clickAndWait($el)
+          cy.get('@item')
+            .should('not.have.class', 'completed')
+        })
+    })
   })
 
-  it.only('Creates a few todos', () => {
-    cy.focused()
-      .type('One{enter}')
-      .wait('@create')
+  context.skip('With mixed todos', () => {
+    beforeEach(() => {
+      cy.fixture('todos')
+        .each((todo, idx) => cy.request('POST', '/api/todos', Object.assign({}, todo, {isComplete: idx % 2 === 0})))
+      cy.visit('/')
+    })
 
-    cy.get('.todo-list li')
-      .should('have.length', 5)
+    it('Filters todos', () => {
+      const filters = [
+        {link: 'Active', expectedLength: 2},
+        {link: 'Complete', expectedLength: 2},
+        {link: 'All', expectedLength: 4}
+      ]
+  
+      filters.forEach(filter => {
+        cy.contains(filter.link)
+          .click()
+  
+        cy.get('.todo-list li')
+          .should('have.length', filter.expectedLength)
+      })
+    })
   })
 })
