@@ -39,9 +39,9 @@ describe('Smoke Tests', () => {
       cy.visit('/')
     })
     
-    it('Loads existing data from the database', () => {
+    it.only('Loads existing data from the database', () => {
       cy.get('.todo-list li')
-        .should('have.length', 4)
+        .should('have.length', 5)
     })
     
     it('Deletes some todos', () => {

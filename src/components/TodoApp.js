@@ -68,7 +68,7 @@ export default class TodoApp extends Component {
       	<div>
 					<header className="header">
 						<h1>todos</h1>
-						{this.state.error ? <h1 className='error'>Oh no!</h1> : null}
+						{this.state.error ? <span className='error'>Oh no!</span> : null}
 						<TodoForm
 							handleSubmit={this.handleTodoSubmit}
 							currentTodo={this.state.currentTodo}

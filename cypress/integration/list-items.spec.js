@@ -46,7 +46,7 @@ describe('List Items', () => {
     cy.route({
       url: `/api/todos/1`,
       method: 'DELETE',
-      status: 202,
+      status: 200,
       response: {}
      })
 
