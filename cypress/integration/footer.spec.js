@@ -26,18 +26,20 @@ describe('Footer', () => {
   // })
 
   it('Applies filters properly', () => {
+    debugger;
     const filters = [
       {link: 'Active', expectedLength: 2},
       {link: 'Complete', expectedLength: 2},
       {link: 'All', expectedLength: 4}
     ]
 
-    filters.forEach(filter => {
-      cy.contains(filter.link)
-        .click()
+    cy.wrap(filters)
+      .each(filter => {
+        cy.contains(filter.link)
+          .click()
 
-      cy.get('.todo-list li')
-        .should('have.length', filter.expectedLength)
-    })
+        cy.get('.todo-list li')
+          .should('have.length', filter.expectedLength)
+      })
   })
 })

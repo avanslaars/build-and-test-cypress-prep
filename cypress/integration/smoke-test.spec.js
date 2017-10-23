@@ -1,12 +1,9 @@
-const clearDatabase = () => {
-  cy.request('GET', '/api/todos')
-    .its('body')
-    .each(todo => cy.request('DELETE', `/api/todos/${todo.id}`))
-}
-
 describe('Smoke Tests', () => {
-  beforeEach(clearDatabase)
-  after(clearDatabase)
+  beforeEach(() => {
+    cy.request('GET', '/api/todos')
+      .its('body')
+      .each(todo => cy.request('DELETE', `/api/todos/${todo.id}`))
+  })
 
   context('With no todos', () => {
     it('Creates some todos', () => {
@@ -39,9 +36,9 @@ describe('Smoke Tests', () => {
       cy.visit('/')
     })
     
-    it.only('Loads existing data from the database', () => {
+    it('Loads existing data from the database', () => {
       cy.get('.todo-list li')
-        .should('have.length', 5)
+        .should('have.length', 4)
     })
     
     it('Deletes some todos', () => {
@@ -56,14 +53,11 @@ describe('Smoke Tests', () => {
             .click()
             .wait('@delete')
         })
-        .should('have.length', 0)
+        // .should('have.length', 0)
+        .should('not.exist')
     })
 
     it('Toggles todos', () => {
-      cy.server()
-      cy.route('PUT', '/api/todos/*')
-        .as('update')
-    
       const clickAndWait = ($el) => {
           cy.wrap($el)
             .as('item')
@@ -72,6 +66,10 @@ describe('Smoke Tests', () => {
             .wait('@update')
       }
 
+      cy.server()
+      cy.route('PUT', '/api/todos/*')
+        .as('update')
+    
       cy.get('.todo-list li')
         .each($el => {
           clickAndWait($el)
@@ -100,7 +98,7 @@ describe('Smoke Tests', () => {
         {link: 'All', expectedLength: 4}
       ]
   
-      filters.forEach(filter => {
+      cy.wrap(filters).each(filter => {
         cy.contains(filter.link)
           .click()
   
