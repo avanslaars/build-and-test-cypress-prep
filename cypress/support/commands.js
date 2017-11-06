@@ -24,8 +24,11 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('seedAndVisit', () => {
+Cypress.Commands.add('seedAndVisit', (responseBody = 'fixture:todos') => {
   cy.server()
-    .route('GET', '/api/todos','fixture:todos')
+    .route('GET', '/api/todos', responseBody )
     .visit('/')
+  // cy.server()
+  //   .route('GET', '/api/todos','fixture:todos')
+  //   .visit('/')
 })

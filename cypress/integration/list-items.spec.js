@@ -4,12 +4,19 @@ describe('List Items', () => {
     cy.seedAndVisit()
   })
 
-  it('toggles todos', () => {
+  it.only('toggles todos', () => {
+    // cy.fixture('todos')
+    //   .then(todos => {
+    //     cy.route('PUT', '/api/todos/1', Object.assign({}, todos[0], {isComplete: true}))
+    //   })
     cy.route('PUT', `/api/todos/1`, {
       "id": 1,
       "name": "Buy Milk",
       "isComplete": true
     })
+
+    // cy.pause()
+
     cy.get('.todo-list li')
       .first()
       .as('first-todo')
@@ -17,7 +24,7 @@ describe('List Items', () => {
     cy.get('@first-todo')
       .find('input[type="checkbox"]')
       .click()
-    
+
     cy.get('@first-todo')
       .should('have.class', 'completed')
 
@@ -37,7 +44,7 @@ describe('List Items', () => {
       .first()
       .find('input[type="checkbox"]')
       .click()
-    
+
     cy.get('.error')
       .should('be.visible')
   })
@@ -55,9 +62,9 @@ describe('List Items', () => {
      .find('.destroy')
      .invoke('show') // Make the button visible
      .click()
-     
+
     cy.get('.todo-list li')
      .should('have.length', 3)
-    
+
   })
 })

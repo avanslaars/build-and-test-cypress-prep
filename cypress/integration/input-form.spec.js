@@ -1,5 +1,7 @@
 describe('Input Form', () => {
   beforeEach(() => {
+    // cy.seedAndVisit([])
+    // cy.seedAndVisit('fixture:todos')
     cy.server()
       .route('/api/todos', [])
       .visit('/')
@@ -29,17 +31,17 @@ describe('Input Form', () => {
         id: 1,
         isComplete: false
       })
-  
+
       cy.get('.new-todo')
         .type('test')
         .type('{enter}')
         .should('have.value', '')
-        
+
       cy.get('.todo-list li')
         .should('have.length', 1)
         .and('contain', 'test')
     })
-  
+
     it('Shows an error on a failed submit', () => {
       cy.route({
         url: '/api/todos',
@@ -47,7 +49,7 @@ describe('Input Form', () => {
         status: 500,
         response: {}
       })
-  
+
       cy.get('.new-todo')
         .type('test{enter}')
         .get('.todo-list li')

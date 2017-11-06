@@ -26,7 +26,7 @@ export default class TodoApp extends Component {
 		fetchTodos()
 			.then(({data}) => this.setState({todos: data}))
 			.catch(() => this.setState({error: true}))
-			
+
 	}
 
 	handleNewTodoChange (evt) {
@@ -48,7 +48,15 @@ export default class TodoApp extends Component {
 		const updated = {...targetTodo, isComplete: !targetTodo.isComplete}
 		updateTodo(updated)
 			.then(({data}) => {
-				const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
+				// const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
+				// debugger
+				const targetIndex = this.state.todos.findIndex(x => x.id === data.id)
+				const todos = [
+					...this.state.todos.slice(0,targetIndex),
+					data,
+					...this.state.todos.slice(targetIndex + 1)
+				]
+				// const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
 				this.setState({todos: todos})
 			})
 			.catch(() => this.setState({error: true}))
@@ -75,7 +83,7 @@ export default class TodoApp extends Component {
 							handleChange={this.handleNewTodoChange} />
 					</header>
 					<section className="main">
-						<Route path='/:filter?' render={({match}) => 
+						<Route path='/:filter?' render={({match}) =>
 							<TodoList todos={filterTodos(match.params.filter, this.state.todos)} handleToggle={this.handleToggle} handleDelete={this.handleDelete} />
 						} />
 					</section>
