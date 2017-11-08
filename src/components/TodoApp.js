@@ -49,12 +49,12 @@ export default class TodoApp extends Component {
 		updateTodo(updated)
 			.then(({data}) => {
 				// const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
-				// debugger
+				debugger
 				const targetIndex = this.state.todos.findIndex(x => x.id === data.id)
 				const todos = [
 					...this.state.todos.slice(0,targetIndex),
 					data,
-					...this.state.todos.slice(targetIndex + 1)
+					...this.state.todos.slice(targetIndex)
 				]
 				// const todos = this.state.todos.map(todo => todo.id === data.id ? data : todo)
 				this.setState({todos: todos})
